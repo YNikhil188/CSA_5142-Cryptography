@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <string.h>
+#define MAX_LENGTH 256
+int main() {
+    char ciphertext[MAX_LENGTH];
+    char plaintext[MAX_LENGTH];
+    printf("Enter the ciphertext: ");
+    fgets(ciphertext, MAX_LENGTH, stdin);
+
+    printf("Decrypted text:\n");
+    for (int i = 0; i < strlen(ciphertext); i++) {
+        if (ciphertext[i] == '‡') {
+            plaintext[i] = 'e';
+        } else if (ciphertext[i] == '†') {
+            plaintext[i] = 't';
+        } else if (ciphertext[i] == '*') {
+            plaintext[i] = 'h';
+        } else if (ciphertext[i] == ';') {
+            plaintext[i] = ' ';
+        } else if (ciphertext[i] == ')' || ciphertext[i] == '(' || ciphertext[i] == '?' || ciphertext[i] == '—' || ciphertext[i] == '¶') {
+            continue;
+        } else {
+            plaintext[i] = ciphertext[i];
+        }
+    }
+    plaintext[strlen(ciphertext) - 1] = '\0';   
+    printf("%s\n", plaintext);
+    return 0;
+}
