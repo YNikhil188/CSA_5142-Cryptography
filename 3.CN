@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <string.h>
+int main() {
+    char key[30], plaintext[100], matrix[5][5], ciphertext[100];
+    int alphabet[26] = {0};
+    int k = 0;
+    printf("Enter the keyword: ");
+    scanf("%s", key);
+    printf("Enter the plaintext: ");
+    scanf("%s", plaintext);
+    for (int i = 0; key[i] != '\0'; i++) {
+        if (key[i] == 'j') key[i] = 'i';
+        if (alphabet[key[i] - 'a'] == 0) {
+            alphabet[key[i] - 'a'] = 1;
+            matrix[k / 5][k % 5] = key[i];
+            k++;
+        }
+    }
+    for (char ch = 'a'; ch <= 'z'; ch++) {
+        if (ch == 'j') continue; 
+        if (alphabet[ch - 'a'] == 0) {
+            matrix[k / 5][k % 5] = ch;
+            k++;
+        }
+    }
+    printf("5x5 Matrix:\n");
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            printf("%c ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+    int len = strlen(plaintext);
+    for (int i = 0; i < len; i++) {
+        if (plaintext[i] == 'j') plaintext[i] = 'i'; 
+    }
+    for (int i = 0; i < len - 1; i += 2) {
+        if (plaintext[i] == plaintext[i + 1]) {
+            for (int j = len; j > i + 1; j--) {
+                plaintext[j] = plaintext[j - 1];
+            }
+            plaintext[i + 1] = 'x';
+            len++;
+        }
+    }
+    if (len % 2 != 0) {
+        plaintext[len] = 'x'; 
+        plaintext[len + 1] = '\0';
+    }
+    int row1, col1, row2, col2;
+    for (int i = 0; i < len; i += 2) {
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < 5; col++) {
+                if (matrix[row][col] == plaintext[i]) {
+                    row1 = row;
+                    col1 = col;
+                }
+                if (matrix[row][col] == plaintext[i + 1]) {
+                    row2 = row;
+                    col2 = col;
+                }
+            }
+        }
+        if (row1 == row2) {
+            ciphertext[i] = matrix[row1][(col1 + 1) % 5];
+            ciphertext[i + 1] = matrix[row2][(col2 + 1) % 5];
+        } else if (col1 == col2) {
+            ciphertext[i] = matrix[(row1 + 1) % 5][col1];
+            ciphertext[i + 1] = matrix[(row2 + 1) % 5][col2];
+        } else {
+            ciphertext[i] = matrix[row1][col2];
+            ciphertext[i + 1] = matrix[row2][col1];
+        }
+    }
+    ciphertext[len] = '\0';
+    printf("Ciphertext: %s\n", ciphertext);
+    return 0;
+}
