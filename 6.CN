@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+int main() {
+    char ciphertext[] = "YOUR_CIPHERTEXT_HERE"; 
+    char plaintext[100];
+    int a, b, a_inv;
+    int m = 26;
+    char most_frequent_cipher = 'B'; 
+    char second_frequent_cipher = 'U'; 
+    char most_frequent_plain = 'E'; 
+    char second_frequent_plain = 'T';
+    int y1 = most_frequent_cipher - 'A';
+    int y2 = second_frequent_cipher - 'A';
+    int x1 = most_frequent_plain - 'A';
+    int x2 = second_frequent_plain - 'A';
+    int diff_y = (y1 - y2 + 26) % 26;
+    int diff_x = (x1 - x2 + 26) % 26;
+    a = -1;
+    for (int i = 0; i < 26; i++) {
+        if ((i * diff_x) % 26 == diff_y) {
+            a = i;
+            break;}}
+    b = (y1 - a * x1 + 26) % 26;
+    a_inv = -1;
+    for (int x = 1; x < m; x++) {
+        if ((a * x) % m == 1) {
+            a_inv = x;
+            break;}}
+    int length = strlen(ciphertext);
+    for (int i = 0; i < length; i++) {
+        if (ciphertext[i] >= 'A' && ciphertext[i] <= 'Z') {
+            int y = ciphertext[i] - 'A';
+            int x = (a_inv * (y - b + 26)) % 26;
+            plaintext[i] = x + 'A';
+        } else {
+            plaintext[i] = ciphertext[i];}}
+    plaintext[length] = '\0';
+    printf("Decrypted plaintext: %s\n", plaintext);
+    return 0;
+}
